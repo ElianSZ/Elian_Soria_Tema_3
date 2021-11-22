@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject obstaclePrefab;
     public float startDelay = 2.0f;
     public float repeatRate = 2.0f;
+    private Vector3 spawnPos = new Vector3(35, 0, 0);
+    private PlayerController playerControllerScript;
+    public GameObject[] obstaclePrefabs;
 
     // Start is called before the first frame update
     void Start()
     {
         InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -22,6 +25,13 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnObstacle()
     {
-        Instantiate(obstaclePrefab, new Vector3(35, 0, 0), obstaclePrefab.transform.rotation);
+        // Estamos accediendo a las variables del script PlayerController, en concreto, a la variable GameOver
+        // También se puede hacer así: if (!playerControllerScript.GameOver)
+        if (playerControllerScript.gameOver == false)
+        {
+            // obstaclePrefabs.Length = indica la longitud máxima de prefabs que he puesto en SpawnManager
+            int randomIndex = Random.Range(0, obstaclePrefabs.Length);
+            Instantiate(obstaclePrefabs[randomIndex], spawnPos, obstaclePrefabs[randomIndex].transform.rotation);
+        }
     }
 }
