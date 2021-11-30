@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerAudioSource;
     private AudioSource cameraAudioSource;
     private float jumpForce = 1000;
-    public float gravityModifier;
-    public bool isOnTheGround;
+    private float gravityModifier;
+    private bool isOnTheGround = true;
     public bool gameOver;
     public ParticleSystem explosionParticleSystem;
     public ParticleSystem dirtParticleSystem;
@@ -57,14 +57,17 @@ public class PlayerController : MonoBehaviour
             else if (otherCollider.gameObject.CompareTag("Obstacle"))
             {
                 int randomDeathType = Random.Range(1, 3);                               // Indica que el rango de tipos de muerte será entre 1 y 2
+
+                // Ejecutamos la animación de muerte aleatoria
                 playerAnimator.SetBool("Death_b", true);                                // Indica que pasa de vivo a muerto
                 playerAnimator.SetInteger("DeathType_int", randomDeathType);            // Indica que animación de muerte tiene
 
                 explosionParticleSystem.Play();                                         // Ejecuta el efecto de partículas
-
                 playerAudioSource.PlayOneShot(ExplosionClip, 1f);                       // Ejecuta una vez el audio de explosión
-                cameraAudioSource.volume = 0.1f;                                       // Baja el volumen de la música
 
+                cameraAudioSource.volume = 0.1f;                                        // Baja el volumen de la música
+
+                // Comunica que hemos muerto
                 gameOver = true;
                 Debug.Log(message: "GAME OVER");
             }
